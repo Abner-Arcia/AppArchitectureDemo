@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">App Architecture Demo</string>
+    <string name="title_activity_main">Main Activity</string>
+    <string name="error">Error</string>
+    <string name="begin">Iniciar</string>
+    <string name="posts">Posts</string>
+    <string name="albums">Albums</string>
+    <string name="users">Usuarios</string>
+    <string name="post_detail">Detalles de post</string>
+    <string name="user_id">Usuario ID</string>
+    <string name="post_id">Post ID</string>
+    <string name="title">Título</string>
+    <string name="body">Cuerpo</string>
+    <string name="save">Guardar</string>
+</resources>
