@@ -20,6 +20,8 @@ interface PostDao {
     @Query("SELECT * FROM post WHERE id = :postId")
     fun select(postId: Int): Flow<Post>
 
+    fun selectDistinctUntilChanged(postId: Int) = select(postId).distinctUntilChanged()
+
     @Query("SELECT * FROM post")
     fun selectAll(): Flow<List<Post>>
 

@@ -1,15 +1,15 @@
 package com.example.network
 
 import com.example.models.Post
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface Webservice {
 
     @GET("/posts")
     suspend fun getPosts(): List<Post>
+
+    @GET("/posts/{post_id}")
+    suspend fun getPost(@Path("post_id") postId: Int): Post
 
     @POST("/posts")
     @FormUrlEncoded

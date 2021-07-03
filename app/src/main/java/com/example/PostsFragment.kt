@@ -1,10 +1,10 @@
 package com.example
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,7 +54,7 @@ class PostsFragment : Fragment(), RecyclerViewInterface {
     }
 
     override fun onRecyclerViewItemClickListener(position: Int) {
-        viewModel.selectedPost.value = viewModel.posts.value!!.data!![position]
+        viewModel.selectPost(viewModel.posts.value!!.data!![position])
         findNavController().navigate(R.id.action_postsFragment_to_postDetailFragment)
     }
 }

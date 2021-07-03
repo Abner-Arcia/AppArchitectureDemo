@@ -12,4 +12,5 @@
     <string name="title">Título</string>
     <string name="body">Cuerpo</string>
     <string name="save">Guardar</string>
+    <string name="success">Éxito</string>
 </resources>

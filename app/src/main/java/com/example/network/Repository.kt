@@ -3,10 +3,9 @@ package com.example.network
 import com.example.database.PostDao
 import com.example.models.Post
 import com.example.util.Resource
+import com.example.util.insertResource
 import com.example.util.networkBoundResource
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class Repository @Inject constructor(
@@ -22,14 +21,22 @@ class Repository @Inject constructor(
         )
     }
 
-    suspend fun createPost(
+    fun getPost(postId: Int): Flow<Resource<Post>> {
+        return networkBoundResource(
+            query = { postDao.selectDistinctUntilChanged(postId) },
+            fetch = { webservice.getPost(postId) },
+            saveFetchResult = { post -> postDao.insertOne(post) }
+        )
+    }
+
+    fun createPost(
         userId: Int,
         title: String,
         body: String
-    ): Resource<Post> {
-        return withContext(Dispatchers.IO) {
-            val createdPost = webservice.createPost(userId, title, body)
-            Resource.success(createdPost)
-        }
+    ): Flow<Resource<Unit>> {
+        return insertResource(
+            cache = {  },
+            remote = { webservice.createPost(userId, title, body) }
+        )
     }
 }
