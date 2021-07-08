@@ -1,7 +1,6 @@
 package com.example
 
 import androidx.lifecycle.*
-import com.example.models.Post
 import com.example.network.Repository
 import com.example.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,14 +10,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val repository: Repository
 ) : ViewModel() {
-    val posts: LiveData<Resource<List<Post>>> = repository.getPosts().asLiveData()
+    val postId: Int = savedStateHandle.get<Int>(POST_ID_SAVED_STATE_KEY)!!
 
-    val selectedPost = MutableLiveData<Post>()
+    val selectedPost = repository.getPost(postId).asLiveData()
 
-    private val _createdPost = MutableLiveData<Resource<Unit>>()
-    val createdPost = _createdPost
+    val createdPost = MutableLiveData<Resource<Unit>>()
 
     fun createPost(
         userId: Int,
@@ -27,12 +26,12 @@ class PostViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             repository.createPost(userId, title, body).collect { value ->
-                _createdPost.value = value
+                createdPost.value = value
             }
         }
     }
 
-    fun selectPost(post: Post) {
-        selectedPost.value = post
+    companion object {
+        private const val POST_ID_SAVED_STATE_KEY = "postId"
     }
 }

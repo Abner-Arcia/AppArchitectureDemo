@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.apparchitecturedemo.R
 import com.example.apparchitecturedemo.databinding.FragmentPostsBinding
 import com.example.interfaces.RecyclerViewInterface
 import com.example.util.Status
@@ -18,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class PostsFragment : Fragment(), RecyclerViewInterface {
 
     private lateinit var binding: FragmentPostsBinding
-    private val viewModel: PostViewModel by activityViewModels()
+    private val viewModel: PostsViewModel by viewModels()
     private lateinit var postsAdapter: PostsAdapter
 
     override fun onCreateView(
@@ -54,7 +53,9 @@ class PostsFragment : Fragment(), RecyclerViewInterface {
     }
 
     override fun onRecyclerViewItemClickListener(position: Int) {
-        viewModel.selectPost(viewModel.posts.value!!.data!![position])
-        findNavController().navigate(R.id.action_postsFragment_to_postDetailFragment)
+        val directions = PostsFragmentDirections.actionPostsFragmentToPostDetailFragment(
+            viewModel.posts.value!!.data!![position].id
+        )
+        findNavController().navigate(directions)
     }
 }

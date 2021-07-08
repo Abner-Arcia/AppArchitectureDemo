@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.example.apparchitecturedemo.R
 import com.example.apparchitecturedemo.databinding.FragmentPostDetailBinding
 import com.example.util.Status
@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class PostDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentPostDetailBinding
-    private val viewModel: PostViewModel by activityViewModels()
+    private val viewModel: PostViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,11 +28,21 @@ class PostDetailFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.selectedPost.observe(viewLifecycleOwner) {
-            binding.etUserIdPostDetail.setText(it.userId.toString())
-            binding.etPostIdPostDetail.setText(it.id.toString())
-            binding.etTitlePostDetail.setText(it.title)
-            binding.etBodyPostDetail.setText(it.body)
+        viewModel.selectedPost.observe(viewLifecycleOwner) { post ->
+            when (post.status) {
+                Status.SUCCESS -> {
+                    binding.etUserIdPostDetail.setText(post.data!!.userId.toString())
+                    binding.etPostIdPostDetail.setText(post.data.id.toString())
+                    binding.etTitlePostDetail.setText(post.data.title)
+                    binding.etBodyPostDetail.setText(post.data.body)
+                    binding.pbPostDetail.visibility = View.GONE
+                } Status.LOADING -> {
+                    binding.pbPostDetail.visibility = View.VISIBLE
+                } Status.ERROR -> {
+                    binding.pbPostDetail.visibility = View.GONE
+                    makeToast(getString(R.string.error))
+                }
+            }
         }
         binding.btnSavePostDetail.setOnClickListener {
             viewModel.createPost(
@@ -47,7 +57,7 @@ class PostDetailFragment : Fragment() {
                     binding.pbPostDetail.visibility = View.GONE
                     makeToast(getString(R.string.success))
                 } Status.LOADING -> {
-                    binding.pbPostDetail.visibility = View.VISIBLE
+                binding.pbPostDetail.visibility = View.VISIBLE
                 } Status.ERROR -> {
                     binding.pbPostDetail.visibility = View.GONE
                     makeToast(getString(R.string.error))
